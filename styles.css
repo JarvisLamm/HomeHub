@@ -270,6 +270,14 @@ h2 {
   border: 1px solid rgba(23, 38, 52, 0.06);
 }
 
+.forecast-block {
+  margin-top: 12px;
+  background: var(--surface-strong);
+  border-radius: 14px;
+  padding: 12px;
+  border: 1px solid rgba(23, 38, 52, 0.06);
+}
+
 .tips-block p {
   margin-top: 8px;
   color: #253746;
@@ -377,6 +385,48 @@ h2 {
   margin-bottom: 6px;
 }
 
+.forecast-list {
+  margin-top: 8px;
+  display: grid;
+  gap: 8px;
+}
+
+.forecast-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(15, 41, 62, 0.06);
+  border-radius: 12px;
+  padding: 8px;
+}
+
+.forecast-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.forecast-info {
+  min-width: 0;
+}
+
+.forecast-date {
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.forecast-range {
+  font-size: 0.76rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.forecast-empty {
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
 .transport-cards {
   display: grid;
   gap: 10px;
@@ -400,14 +450,19 @@ h2 {
 .route-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background: linear-gradient(135deg, #275f8d, #259a7e);
-  color: #fff;
-  border-radius: 999px;
-  padding: 5px 10px;
+  gap: 10px;
+  color: #22384a;
   font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 0.03em;
+}
+
+.route-code {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #e9eef3;
+  border: 1px solid rgba(34, 56, 74, 0.18);
 }
 
 .route-icon {
@@ -579,6 +634,10 @@ h2 {
     flex-direction: column;
   }
 
+  .weather-panel {
+    overflow-y: auto;
+  }
+
   .panel-heading {
     margin-bottom: 8px;
   }
@@ -631,14 +690,16 @@ h2 {
   }
 
   .tips-block,
-  .warnings-block {
+  .warnings-block,
+  .forecast-block {
     margin-top: 10px;
     padding: 10px;
     border-radius: 10px;
   }
 
   .tips-block h2,
-  .warnings-block h2 {
+  .warnings-block h2,
+  .forecast-block h2 {
     font-size: 1rem;
   }
 
@@ -647,7 +708,7 @@ h2 {
     font-size: 0.9rem;
     line-height: 1.28;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
@@ -682,8 +743,8 @@ h2 {
     padding-left: 14px;
     font-size: 0.84rem;
     line-height: 1.24;
-    max-height: 3.1em;
-    overflow: hidden;
+    max-height: none;
+    overflow: visible;
   }
 
   .warning-details li {
@@ -706,14 +767,17 @@ h2 {
   }
 
   .route-badge {
-    padding: 5px 10px;
     font-size: 0.85rem;
-    gap: 5px;
+    gap: 9px;
+  }
+
+  .route-code {
+    padding: 4px 11px;
   }
 
   .route-icon {
-    width: 34px;
-    height: 16px;
+    width: 44px;
+    height: 20px;
   }
 
   .route-destination {
@@ -754,6 +818,35 @@ h2 {
   .empty-row {
     margin-top: 8px;
     font-size: 0.88rem;
+  }
+
+  .forecast-list {
+    margin-top: 6px;
+    gap: 6px;
+  }
+
+  .forecast-block {
+    margin-top: auto;
+  }
+
+  .forecast-item {
+    padding: 6px;
+    border-radius: 9px;
+    gap: 7px;
+  }
+
+  .forecast-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .forecast-date {
+    font-size: 0.78rem;
+  }
+
+  .forecast-range {
+    font-size: 0.69rem;
+    margin-top: 1px;
   }
 }
 

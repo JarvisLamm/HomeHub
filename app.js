@@ -9,6 +9,7 @@
     weather: null,
     warnsum: null,
     warningInfo: null,
+    forecast: null,
     lastWeatherFetch: null,
     transport: {
       citybusStop: null,
@@ -28,6 +29,10 @@
       rainLabel: "Rainfall (max district)",
       tipsTitle: "Special Tips",
       warningsTitle: "Active Warnings",
+      forecastTitle: "3-Day Forecast",
+      noForecast: "Forecast temporarily unavailable",
+      forecastTemp: "Temp",
+      forecastRh: "RH",
       noWarnings: "No active warning signal",
       transportTitle: "Bus and Minibus ETA",
       transportSubtitle: "Robinson Road commute view",
@@ -53,6 +58,10 @@
       rainLabel: "雨量 (各區最高)",
       tipsTitle: "天氣提示",
       warningsTitle: "現行警告",
+      forecastTitle: "三天天氣預報",
+      noForecast: "暫時未有預報資料",
+      forecastTemp: "氣溫",
+      forecastRh: "濕度",
       noWarnings: "現時沒有生效警告",
       transportTitle: "巴士及小巴到站時間",
       transportSubtitle: "羅便臣道通勤模式",
@@ -92,6 +101,8 @@
     tipsTitle: byId("tipsTitle"),
     specialTips: byId("specialTips"),
     warningsTitle: byId("warningsTitle"),
+    forecastTitle: byId("forecastTitle"),
+    forecastList: byId("forecastList"),
     warningChips: byId("warningChips"),
     warningDetails: byId("warningDetails"),
     transportTitle: byId("transportTitle"),
@@ -312,9 +323,36 @@
     setText(refs.rainLabel, tr("rainLabel"));
     setText(refs.tipsTitle, tr("tipsTitle"));
     setText(refs.warningsTitle, tr("warningsTitle"));
+    setText(refs.forecastTitle, tr("forecastTitle"));
     setText(refs.transportTitle, tr("transportTitle"));
     setText(refs.transportSubtitle, tr("transportSubtitle"));
     refs.langToggle.textContent = state.lang === "en" ? "繁中" : "EN";
+  }
+
+  function formatForecastDate(value) {
+    var text = String(value || "");
+    if (!/^\d{8}$/.test(text)) {
+      return tr("unknown");
+    }
+
+    var year = Number(text.slice(0, 4));
+    var month = Number(text.slice(4, 6)) - 1;
+    var day = Number(text.slice(6, 8));
+    var dt = new Date(year, month, day);
+
+    if (isNaN(dt.getTime())) {
+      return tr("unknown");
+    }
+
+    return dt.toLocaleDateString(state.lang === "tc" ? "zh-HK" : "en-GB", {
+      weekday: "short",
+      day: "numeric",
+      month: "numeric"
+    });
+  }
+
+  function weatherIconUrl(iconCode) {
+    return "https://www.hko.gov.hk/images/HKOWxIconOutline/Outline_wxicon_pic" + iconCode + ".png";
   }
 
   function renderClock() {
@@ -381,7 +419,7 @@
       var iconCode = state.weather.icon[0];
       refs.weatherIcon.classList.remove("hidden");
       refs.weatherGlyph.classList.add("hidden");
-      refs.weatherIcon.src = "https://www.hko.gov.hk/images/HKOWxIconOutline/Outline_wxicon_pic" + iconCode + ".png";
+      refs.weatherIcon.src = weatherIconUrl(iconCode);
       refs.weatherIcon.alt = tr("weatherTitle") + " " + iconCode;
       refs.weatherIcon.__fallbackStep = 0;
       refs.weatherIcon.onload = function () {
@@ -627,7 +665,7 @@
       chip.className = "warning-chip" + (cls ? " " + cls : "");
       chip.innerHTML = [
         symbolHtml,
-        "<span class='signal-text'>" + escapeHtml(code + " " + (item.name || "")) + "</span>"
+        "<span class='signal-text'>" + escapeHtml(item.name || code) + "</span>"
       ].join("");
       refs.warningChips.appendChild(chip);
     });
@@ -645,12 +683,41 @@
         }
       });
 
-      lines.slice(0, 2).forEach(function (line) {
+      lines.forEach(function (line) {
         var li = document.createElement("li");
         li.textContent = line;
         refs.warningDetails.appendChild(li);
       });
     }
+  }
+
+  function renderForecast() {
+    refs.forecastList.innerHTML = "";
+
+    if (!state.forecast || !Array.isArray(state.forecast.weatherForecast) || !state.forecast.weatherForecast.length) {
+      refs.forecastList.innerHTML = "<div class=\"forecast-empty\">" + escapeHtml(tr("noForecast")) + "</div>";
+      return;
+    }
+
+    var list = state.forecast.weatherForecast.slice(0, 3);
+    refs.forecastList.innerHTML = list.map(function (day) {
+      var iconCode = day.ForecastIcon;
+      var minTemp = day.forecastMintemp && day.forecastMintemp.value !== undefined ? day.forecastMintemp.value : "--";
+      var maxTemp = day.forecastMaxtemp && day.forecastMaxtemp.value !== undefined ? day.forecastMaxtemp.value : "--";
+      var minRh = day.forecastMinrh && day.forecastMinrh.value !== undefined ? day.forecastMinrh.value : "--";
+      var maxRh = day.forecastMaxrh && day.forecastMaxrh.value !== undefined ? day.forecastMaxrh.value : "--";
+
+      return [
+        "<article class=\"forecast-item\">",
+        "<img class=\"forecast-icon\" src=\"" + escapeHtml(weatherIconUrl(iconCode)) + "\" alt=\"forecast " + escapeHtml(iconCode) + "\">",
+        "<div class=\"forecast-info\">",
+        "<div class=\"forecast-date\">" + escapeHtml(formatForecastDate(day.forecastDate)) + "</div>",
+        "<div class=\"forecast-range\">" + escapeHtml(tr("forecastTemp")) + ": " + escapeHtml(minTemp + "-" + maxTemp + "C") + "</div>",
+        "<div class=\"forecast-range\">" + escapeHtml(tr("forecastRh")) + ": " + escapeHtml(minRh + "-" + maxRh + "%") + "</div>",
+        "</div>",
+        "</article>"
+      ].join("");
+    }).join("");
   }
 
   function citybusRows(route) {
@@ -708,7 +775,7 @@
       "<div class=\"route-top\">",
       "<div class=\"route-badge\">",
       "<span class=\"route-icon\">" + transportIconMarkup(mode) + "</span>",
-      "<span>" + escapeHtml(routeBadge) + "</span>",
+      "<span class=\"route-code\">" + escapeHtml(routeBadge) + "</span>",
       "</div>",
       "<div class=\"route-destination\">" + escapeHtml(tr("destination")) + ": " + escapeHtml(destination || tr("unknown")) + "</div>",
       "</div>",
@@ -748,6 +815,7 @@
     renderSyncStatus();
     renderWeather();
     renderWarnings();
+    renderForecast();
     renderTransport();
     setTheme();
   }
@@ -758,11 +826,13 @@
     var currentUrl = replaceTemplate(config.weather.current, { lang: lang });
     var warnsumUrl = replaceTemplate(config.weather.warnsum, { lang: lang });
     var warningInfoUrl = replaceTemplate(config.weather.warningInfo, { lang: lang });
+    var forecastUrl = replaceTemplate(config.weather.forecast, { lang: lang });
 
     return allSettledCompat([
       fetchJson(currentUrl),
       fetchJson(warnsumUrl),
-      fetchJson(warningInfoUrl)
+      fetchJson(warningInfoUrl),
+      fetchJson(forecastUrl)
     ]).then(function (results) {
       if (results[0].status === "fulfilled") {
         state.weather = results[0].value;
@@ -772,6 +842,9 @@
       }
       if (results[2].status === "fulfilled") {
         state.warningInfo = results[2].value;
+      }
+      if (results[3].status === "fulfilled") {
+        state.forecast = results[3].value;
       }
       state.lastWeatherFetch = new Date().toISOString();
       renderAll();

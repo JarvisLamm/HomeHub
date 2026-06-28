@@ -10,7 +10,8 @@ window.HOME_HUB_CONFIG = {
   weather: {
     current: "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang={lang}",
     warnsum: "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warnsum&lang={lang}",
-    warningInfo: "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warningInfo&lang={lang}"
+    warningInfo: "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warningInfo&lang={lang}",
+    forecast: "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang={lang}"
   },
   transport: {
     citybus: {
