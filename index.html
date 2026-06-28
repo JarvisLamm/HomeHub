@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Home Hub dashboard for weather, warnings, and commute ETAs.">
+  <title>Home Hub Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app" class="app theme-clear">
+    <div class="background-layer" aria-hidden="true">
+      <div class="orb orb-a"></div>
+      <div class="orb orb-b"></div>
+      <div class="orb orb-c"></div>
+      <div id="rainLayer" class="rain-layer hidden"></div>
+    </div>
+
+    <header class="top-bar panel">
+      <div class="clock-wrap">
+        <div id="clockValue" class="clock-value">--:--:--</div>
+        <div id="dateValue" class="date-value">--</div>
+      </div>
+      <div class="top-actions">
+        <div id="syncStatus" class="sync-status">Loading data...</div>
+        <button id="langToggle" class="lang-toggle" type="button" aria-label="Switch language">繁中</button>
+      </div>
+    </header>
+
+    <main class="dashboard-grid">
+      <section class="panel weather-panel" aria-labelledby="weatherTitle">
+        <div class="panel-heading">
+          <h1 id="weatherTitle">Weather</h1>
+        </div>
+
+        <div class="weather-main">
+          <div class="weather-icon-wrap">
+            <img id="weatherIcon" class="weather-icon" src="" alt="Weather icon">
+          </div>
+
+          <div class="metric-grid">
+            <div class="metric-card">
+              <span id="tempLabel" class="metric-label">Temperature</span>
+              <strong id="tempValue" class="metric-value">--</strong>
+            </div>
+            <div class="metric-card">
+              <span id="humidityLabel" class="metric-label">Relative Humidity</span>
+              <strong id="humidityValue" class="metric-value">--</strong>
+            </div>
+            <div class="metric-card">
+              <span id="rainLabel" class="metric-label">Rainfall</span>
+              <strong id="rainValue" class="metric-value">--</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="tips-block">
+          <h2 id="tipsTitle">Special Tips</h2>
+          <p id="specialTips">--</p>
+        </div>
+
+        <div class="warnings-block">
+          <h2 id="warningsTitle">Active Warnings</h2>
+          <div id="warningChips" class="warning-chips"></div>
+          <ul id="warningDetails" class="warning-details"></ul>
+        </div>
+      </section>
+
+      <section class="panel transport-panel" aria-labelledby="transportTitle">
+        <div class="panel-heading">
+          <h1 id="transportTitle">Bus and Minibus ETA</h1>
+          <p id="transportSubtitle" class="panel-subtitle">Robinson Road commute view</p>
+        </div>
+        <div id="transportCards" class="transport-cards"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
