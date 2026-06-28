@@ -149,12 +149,18 @@ body {
   gap: 8px;
 }
 
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
 .sync-status {
   color: var(--muted);
   font-size: 0.82rem;
   text-align: right;
 }
 
+.theme-toggle,
 .lang-toggle {
   border: none;
   background: linear-gradient(135deg, var(--accent), #0b4f70);
@@ -166,6 +172,11 @@ body {
   min-width: 76px;
   font-weight: 600;
   cursor: pointer;
+}
+
+.theme-toggle {
+  min-width: 78px;
+  background: linear-gradient(135deg, #454d57, #1f2733);
 }
 
 .dashboard-grid {
@@ -376,13 +387,18 @@ h2 {
 .warning-details {
   margin-top: 10px;
   padding-left: 16px;
+  display: grid;
+  gap: 4px;
   color: #2b3f4f;
   font-size: 0.88rem;
   line-height: 1.3;
 }
 
 .warning-details li {
-  margin-bottom: 6px;
+  margin-bottom: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .forecast-list {
@@ -549,6 +565,86 @@ h2 {
   --accent-alt: #1f6d91;
 }
 
+.app.mode-dark {
+  --bg: #0f141a;
+  --surface: rgba(21, 28, 36, 0.84);
+  --surface-strong: rgba(27, 36, 46, 0.95);
+  --text: #e7eef6;
+  --muted: #a6b8ca;
+  --shadow: 0 20px 44px rgba(0, 0, 0, 0.48);
+}
+
+.app.mode-dark .background-layer {
+  background:
+    radial-gradient(140% 90% at 8% 0%, rgba(151, 121, 72, 0.28), transparent 54%),
+    radial-gradient(120% 90% at 100% 100%, rgba(49, 88, 128, 0.24), transparent 62%),
+    linear-gradient(165deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0));
+}
+
+.app.mode-dark .orb-a {
+  background: rgba(173, 121, 49, 0.32);
+}
+
+.app.mode-dark .orb-b {
+  background: rgba(35, 112, 102, 0.28);
+}
+
+.app.mode-dark .orb-c {
+  background: rgba(59, 94, 136, 0.22);
+}
+
+.app.mode-dark .panel,
+.app.mode-dark .metric-card,
+.app.mode-dark .tips-block,
+.app.mode-dark .warnings-block,
+.app.mode-dark .forecast-block,
+.app.mode-dark .route-card {
+  border-color: rgba(160, 181, 201, 0.2);
+}
+
+.app.mode-dark .tips-block p,
+.app.mode-dark .warning-details,
+.app.mode-dark .route-stop,
+.app.mode-dark .route-badge {
+  color: #d3deea;
+}
+
+.app.mode-dark .route-code,
+.app.mode-dark .warning-chip {
+  background: #2a3947;
+  border-color: rgba(173, 196, 219, 0.26);
+  color: #d9e7f4;
+}
+
+.app.mode-dark .warning-chip.rain {
+  background: #224764;
+  border-color: #3a7094;
+}
+
+.app.mode-dark .warning-chip.typhoon,
+.app.mode-dark .warning-chip.storm {
+  background: #4d3740;
+  border-color: #8f6674;
+}
+
+.app.mode-dark .eta-item,
+.app.mode-dark .forecast-item {
+  background: rgba(132, 171, 205, 0.17);
+}
+
+.app.mode-dark .eta-remark {
+  color: #bdd0e3;
+}
+
+.app.mode-dark .theme-toggle {
+  background: linear-gradient(135deg, #f0b34a, #c9872b);
+  color: #18202a;
+}
+
+.app.mode-dark .lang-toggle {
+  background: linear-gradient(135deg, #1b6a78, #3854a3);
+}
+
 @keyframes drift {
   0%,
   100% {
@@ -628,7 +724,7 @@ h2 {
 
   .weather-panel,
   .transport-panel {
-    padding: 12px;
+    padding: 10px;
     min-height: 0;
     display: flex;
     flex-direction: column;
@@ -656,18 +752,18 @@ h2 {
   }
 
   .weather-icon-wrap {
-    width: 88px;
-    height: 88px;
-    border-radius: 14px;
+    width: 76px;
+    height: 76px;
+    border-radius: 12px;
   }
 
   .weather-icon {
-    width: 66px;
-    height: 66px;
+    width: 56px;
+    height: 56px;
   }
 
   .weather-glyph {
-    font-size: 2.3rem;
+    font-size: 2rem;
   }
 
   .metric-grid {
@@ -675,8 +771,8 @@ h2 {
   }
 
   .metric-card {
-    min-height: 72px;
-    padding: 9px;
+    min-height: 60px;
+    padding: 8px;
     border-radius: 10px;
   }
 
@@ -686,14 +782,14 @@ h2 {
 
   .metric-value {
     margin-top: 4px;
-    font-size: 1.2rem;
+    font-size: 1.08rem;
   }
 
   .tips-block,
   .warnings-block,
   .forecast-block {
-    margin-top: 10px;
-    padding: 10px;
+    margin-top: 8px;
+    padding: 8px;
     border-radius: 10px;
   }
 
@@ -705,10 +801,10 @@ h2 {
 
   .tips-block p {
     margin-top: 6px;
-    font-size: 0.9rem;
-    line-height: 1.28;
+    font-size: 0.84rem;
+    line-height: 1.2;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
@@ -719,7 +815,7 @@ h2 {
   }
 
   .warning-chip {
-    padding: 6px 9px;
+    padding: 5px 8px;
     gap: 5px;
   }
 
@@ -735,20 +831,20 @@ h2 {
   }
 
   .signal-text {
-    font-size: 0.84rem;
+    font-size: 0.8rem;
   }
 
   .warning-details {
-    margin-top: 8px;
+    margin-top: 6px;
     padding-left: 14px;
-    font-size: 0.84rem;
-    line-height: 1.24;
+    font-size: 0.8rem;
+    line-height: 1.16;
     max-height: none;
     overflow: visible;
   }
 
   .warning-details li {
-    margin-bottom: 3px;
+    margin-bottom: 0;
   }
 
   .transport-cards {
@@ -821,8 +917,9 @@ h2 {
   }
 
   .forecast-list {
-    margin-top: 6px;
-    gap: 6px;
+    margin-top: 4px;
+    gap: 5px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .forecast-block {
@@ -830,22 +927,23 @@ h2 {
   }
 
   .forecast-item {
-    padding: 6px;
+    padding: 5px;
     border-radius: 9px;
-    gap: 7px;
+    gap: 6px;
+    align-items: flex-start;
   }
 
   .forecast-icon {
-    width: 28px;
-    height: 28px;
+    width: 20px;
+    height: 20px;
   }
 
   .forecast-date {
-    font-size: 0.78rem;
+    font-size: 0.68rem;
   }
 
   .forecast-range {
-    font-size: 0.69rem;
+    font-size: 0.62rem;
     margin-top: 1px;
   }
 }

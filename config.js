@@ -49,6 +49,7 @@ window.HOME_HUB_CONFIG = {
   },
   ui: {
     maxEtaRows: 3,
+    warningSummaryLines: 2,
     staleAfterMinutes: 5,
     defaultLang: "en"
   }

@@ -5,6 +5,7 @@
 
   var state = {
     lang: config.ui.defaultLang,
+    themeMode: "light",
     now: new Date(),
     weather: null,
     warnsum: null,
@@ -48,6 +49,9 @@
       route23Label: "Citybus 23",
       route40Label: "Citybus 40",
       route56aLabel: "GMB 56A",
+      themeLight: "Light",
+      themeDark: "Dark",
+      switchTheme: "Switch theme",
       fallbackTip: "No special weather tip right now.",
       unknown: "--"
     },
@@ -77,6 +81,9 @@
       route23Label: "城巴 23",
       route40Label: "城巴 40",
       route56aLabel: "小巴 56A",
+      themeLight: "淺色",
+      themeDark: "深色",
+      switchTheme: "切換主題",
       fallbackTip: "暫時沒有特別天氣提示。",
       unknown: "--"
     }
@@ -88,6 +95,7 @@
     clockValue: byId("clockValue"),
     dateValue: byId("dateValue"),
     syncStatus: byId("syncStatus"),
+    themeToggle: byId("themeToggle"),
     langToggle: byId("langToggle"),
     weatherTitle: byId("weatherTitle"),
     weatherIcon: byId("weatherIcon"),
@@ -246,6 +254,28 @@
     node.textContent = value;
   }
 
+  function loadThemePreference() {
+    var saved = "";
+
+    try {
+      saved = window.localStorage.getItem("homeHubThemeMode") || "";
+    } catch (error) {
+      saved = "";
+    }
+
+    if (saved === "dark") {
+      state.themeMode = "dark";
+    }
+  }
+
+  function persistThemePreference() {
+    try {
+      window.localStorage.setItem("homeHubThemeMode", state.themeMode);
+    } catch (error) {
+      // Ignore storage errors in private mode.
+    }
+  }
+
   function currentTemperature() {
     if (!state.weather || !state.weather.temperature || !Array.isArray(state.weather.temperature.data)) {
       return null;
@@ -307,7 +337,7 @@
       themeClass = "theme-hot";
     }
 
-    refs.app.className = "app " + themeClass;
+    refs.app.className = "app " + themeClass + (state.themeMode === "dark" ? " mode-dark" : "");
 
     if (themeClass === "theme-rain" || themeClass === "theme-storm") {
       refs.rainLayer.classList.remove("hidden");
@@ -327,6 +357,11 @@
     setText(refs.transportTitle, tr("transportTitle"));
     setText(refs.transportSubtitle, tr("transportSubtitle"));
     refs.langToggle.textContent = state.lang === "en" ? "繁中" : "EN";
+
+    if (refs.themeToggle) {
+      refs.themeToggle.textContent = state.themeMode === "dark" ? tr("themeLight") : tr("themeDark");
+      refs.themeToggle.setAttribute("aria-label", tr("switchTheme"));
+    }
   }
 
   function formatForecastDate(value) {
@@ -633,6 +668,16 @@
     return "default";
   }
 
+  function compactWarningText(line) {
+    var text = String(line || "").replace(/\s+/g, " ").trim();
+
+    if (text.length <= 120) {
+      return text;
+    }
+
+    return text.slice(0, 117) + "...";
+  }
+
   function transportIconMarkup(mode) {
     var src = mode === "gmb" ? "icon/minibus.png" : "icon/bus.png";
     var alt = mode === "gmb" ? "Minibus" : "Bus";
@@ -683,9 +728,9 @@
         }
       });
 
-      lines.forEach(function (line) {
+      lines.slice(0, Number(config.ui.warningSummaryLines) || 3).forEach(function (line) {
         var li = document.createElement("li");
-        li.textContent = line;
+        li.textContent = compactWarningText(line);
         refs.warningDetails.appendChild(li);
       });
     }
@@ -957,6 +1002,12 @@
     fetchWeatherAll();
   }
 
+  function onThemeToggle() {
+    state.themeMode = state.themeMode === "dark" ? "light" : "dark";
+    persistThemePreference();
+    renderAll();
+  }
+
   function tick() {
     state.now = new Date();
     renderClock();
@@ -965,7 +1016,12 @@
   }
 
   function init() {
+    loadThemePreference();
     refs.langToggle.addEventListener("click", onLanguageToggle);
+
+    if (refs.themeToggle) {
+      refs.themeToggle.addEventListener("click", onThemeToggle);
+    }
 
     state.now = new Date();
     renderAll();
