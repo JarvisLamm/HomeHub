@@ -5,6 +5,7 @@
 
   var state = {
     lang: config.ui.defaultLang,
+    themeMode: "light",
     now: new Date(),
     weather: null,
     warnsum: null,
@@ -49,6 +50,8 @@
       route40Label: "Citybus 40",
       route56aLabel: "GMB 56A",
       fallbackTip: "No special weather tip right now.",
+      themeDark: "Dark",
+      themeLight: "Light",
       unknown: "--"
     },
     tc: {
@@ -78,6 +81,8 @@
       route40Label: "城巴 40",
       route56aLabel: "小巴 56A",
       fallbackTip: "暫時沒有特別天氣提示。",
+      themeDark: "深色",
+      themeLight: "淺色",
       unknown: "--"
     }
   };
@@ -89,6 +94,7 @@
     dateValue: byId("dateValue"),
     syncStatus: byId("syncStatus"),
     langToggle: byId("langToggle"),
+    themeToggle: byId("themeToggle"),
     weatherTitle: byId("weatherTitle"),
     weatherIcon: byId("weatherIcon"),
     weatherGlyph: byId("weatherGlyph"),
@@ -120,6 +126,21 @@
 
   function langCode() {
     return state.lang === "tc" ? "tc" : "en";
+  }
+
+  function loadThemeMode() {
+    try {
+      return localStorage.getItem("homehub-theme-mode") === "dark" ? "dark" : "light";
+    } catch (error) {
+      return "light";
+    }
+  }
+
+  function persistThemeMode() {
+    try {
+      localStorage.setItem("homehub-theme-mode", state.themeMode);
+    } catch (error) {
+    }
   }
 
   function formatDateTime(value) {
@@ -307,7 +328,7 @@
       themeClass = "theme-hot";
     }
 
-    refs.app.className = "app " + themeClass;
+    refs.app.className = "app " + themeClass + (state.themeMode === "dark" ? " mode-dark" : "");
 
     if (themeClass === "theme-rain" || themeClass === "theme-storm") {
       refs.rainLayer.classList.remove("hidden");
@@ -327,6 +348,7 @@
     setText(refs.transportTitle, tr("transportTitle"));
     setText(refs.transportSubtitle, tr("transportSubtitle"));
     refs.langToggle.textContent = state.lang === "en" ? "繁中" : "EN";
+    refs.themeToggle.textContent = state.themeMode === "dark" ? tr("themeLight") : tr("themeDark");
   }
 
   function formatForecastDate(value) {
@@ -522,10 +544,10 @@
     }
 
     if (upperCode.indexOf("WRAIN") === 0 || lowerName.indexOf("rainstorm") !== -1) {
-      if (upperCode.indexOf("B") !== -1 || lowerName.indexOf("black rainstorm") !== -1) {
+      if (upperCode.slice(-1) === "B" || lowerName.indexOf("black rainstorm") !== -1) {
         return base + "rainb.gif";
       }
-      if (upperCode.indexOf("R") !== -1 || lowerName.indexOf("red rainstorm") !== -1) {
+      if (upperCode.slice(-1) === "R" || lowerName.indexOf("red rainstorm") !== -1) {
         return base + "rainr.gif";
       }
       return base + "raina.gif";
@@ -683,7 +705,7 @@
         }
       });
 
-      lines.forEach(function (line) {
+      lines.slice(0, 2).forEach(function (line) {
         var li = document.createElement("li");
         li.textContent = line;
         refs.warningDetails.appendChild(li);
@@ -957,6 +979,12 @@
     fetchWeatherAll();
   }
 
+  function onThemeToggle() {
+    state.themeMode = state.themeMode === "dark" ? "light" : "dark";
+    persistThemeMode();
+    renderAll();
+  }
+
   function tick() {
     state.now = new Date();
     renderClock();
@@ -966,7 +994,9 @@
 
   function init() {
     refs.langToggle.addEventListener("click", onLanguageToggle);
+    refs.themeToggle.addEventListener("click", onThemeToggle);
 
+    state.themeMode = loadThemeMode();
     state.now = new Date();
     renderAll();
 

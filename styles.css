@@ -155,7 +155,8 @@ body {
   text-align: right;
 }
 
-.lang-toggle {
+.lang-toggle,
+.theme-toggle {
   border: none;
   background: linear-gradient(135deg, var(--accent), #0b4f70);
   color: #fff;
@@ -166,6 +167,10 @@ body {
   min-width: 76px;
   font-weight: 600;
   cursor: pointer;
+}
+
+.theme-toggle {
+  background: linear-gradient(135deg, #4d5f72, #2d3b48);
 }
 
 .dashboard-grid {
@@ -547,6 +552,66 @@ h2 {
   --bg: #dde4ef;
   --accent: #4a4d79;
   --accent-alt: #1f6d91;
+}
+
+.mode-dark {
+  --bg: #101722;
+  --surface: rgba(23, 33, 46, 0.86);
+  --surface-strong: rgba(28, 40, 56, 0.93);
+  --text: #e7eff8;
+  --muted: #aec1d6;
+  --shadow: 0 18px 42px rgba(3, 8, 14, 0.5);
+}
+
+.mode-dark .background-layer {
+  background:
+    radial-gradient(140% 90% at 8% 0%, rgba(156, 116, 53, 0.36), transparent 54%),
+    radial-gradient(120% 90% at 100% 100%, rgba(47, 95, 134, 0.28), transparent 62%),
+    linear-gradient(165deg, rgba(41, 57, 74, 0.38), rgba(16, 23, 34, 0));
+}
+
+.mode-dark .metric-card,
+.mode-dark .tips-block,
+.mode-dark .warnings-block,
+.mode-dark .forecast-block {
+  border-color: rgba(196, 216, 238, 0.12);
+}
+
+.mode-dark .tips-block p,
+.mode-dark .warning-details,
+.mode-dark .eta-remark {
+  color: #d0dfef;
+}
+
+.mode-dark .warning-chip {
+  background: #1e2d3d;
+  color: #dce9f7;
+  border-color: rgba(151, 188, 222, 0.3);
+}
+
+.mode-dark .warning-chip.rain {
+  background: #1a3550;
+  border-color: #2a587f;
+}
+
+.mode-dark .warning-chip.typhoon,
+.mode-dark .warning-chip.storm {
+  background: #4b2f37;
+  border-color: #8f5868;
+}
+
+.mode-dark .forecast-item {
+  background: rgba(132, 168, 198, 0.18);
+}
+
+.mode-dark .route-card {
+  background: rgba(30, 45, 60, 0.62);
+  border-color: rgba(165, 196, 226, 0.2);
+}
+
+.mode-dark .route-destination,
+.mode-dark .route-stop {
+  color: #dce9f7;
 }
 
 @keyframes drift {
