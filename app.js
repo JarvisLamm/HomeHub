@@ -82,6 +82,7 @@
     langToggle: byId("langToggle"),
     weatherTitle: byId("weatherTitle"),
     weatherIcon: byId("weatherIcon"),
+    weatherGlyph: byId("weatherGlyph"),
     tempLabel: byId("tempLabel"),
     tempValue: byId("tempValue"),
     humidityLabel: byId("humidityLabel"),
@@ -116,7 +117,7 @@
     }
 
     var dt = new Date(value);
-    if (Number.isNaN(dt.getTime())) {
+    if (isNaN(dt.getTime())) {
       return tr("unknown");
     }
 
@@ -129,7 +130,7 @@
 
   function minutesUntil(value) {
     var dt = new Date(value);
-    if (Number.isNaN(dt.getTime())) {
+    if (isNaN(dt.getTime())) {
       return null;
     }
 
@@ -168,9 +169,37 @@
       return response.json();
     });
 
-    return Promise.race([fetchPromise, timeoutPromise]).finally(function () {
+    return Promise.race([fetchPromise, timeoutPromise]).then(function (data) {
       clearTimeout(timer);
+      return data;
+    }, function (error) {
+      clearTimeout(timer);
+      throw error;
     });
+  }
+
+  function allSettledCompat(promises) {
+    return Promise.all(promises.map(function (promise) {
+      return Promise.resolve(promise).then(function (value) {
+        return { status: "fulfilled", value: value };
+      }, function (reason) {
+        return { status: "rejected", reason: reason };
+      });
+    }));
+  }
+
+  function findFirst(list, predicate) {
+    if (!Array.isArray(list)) {
+      return null;
+    }
+
+    for (var i = 0; i < list.length; i += 1) {
+      if (predicate(list[i], i)) {
+        return list[i];
+      }
+    }
+
+    return null;
   }
 
   function replaceTemplate(template, values) {
@@ -205,7 +234,7 @@
     }
 
     var stations = state.weather.temperature.data;
-    var station = stations.find(function (entry) {
+    var station = findFirst(stations, function (entry) {
       return entry.place === "Hong Kong Observatory" || entry.place === "香港天文台";
     }) || stations[0];
 
@@ -322,6 +351,9 @@
       refs.specialTips.textContent = tr("loading");
       refs.weatherIcon.removeAttribute("src");
       refs.weatherIcon.alt = tr("weatherTitle");
+      refs.weatherIcon.classList.add("hidden");
+      refs.weatherGlyph.classList.remove("hidden");
+      refs.weatherGlyph.textContent = "⛅";
       return;
     }
 
@@ -340,9 +372,57 @@
 
     if (Array.isArray(state.weather.icon) && state.weather.icon.length) {
       var iconCode = state.weather.icon[0];
+      refs.weatherIcon.classList.remove("hidden");
+      refs.weatherGlyph.classList.add("hidden");
       refs.weatherIcon.src = "https://www.hko.gov.hk/images/HKOWxIconOutline/pic" + iconCode + ".png";
       refs.weatherIcon.alt = tr("weatherTitle") + " " + iconCode;
+      refs.weatherIcon.__altTried = false;
+      refs.weatherIcon.onload = function () {
+        refs.weatherIcon.classList.remove("hidden");
+        refs.weatherGlyph.classList.add("hidden");
+      };
+      refs.weatherIcon.onerror = function () {
+        if (!refs.weatherIcon.__altTried) {
+          refs.weatherIcon.__altTried = true;
+          refs.weatherIcon.src = "https://www.hko.gov.hk/images/wxicon/pic" + iconCode + ".png";
+          return;
+        }
+
+        refs.weatherIcon.classList.add("hidden");
+        refs.weatherGlyph.classList.remove("hidden");
+        refs.weatherGlyph.textContent = weatherGlyphForIcon(iconCode);
+      };
+    } else {
+      refs.weatherIcon.classList.add("hidden");
+      refs.weatherGlyph.classList.remove("hidden");
+      refs.weatherGlyph.textContent = "⛅";
     }
+  }
+
+  function weatherGlyphForIcon(iconCode) {
+    var code = Number(iconCode);
+
+    if (isNaN(code)) {
+      return "⛅";
+    }
+
+    if ((code >= 60 && code <= 69) || code === 80 || code === 81 || code === 82 || code === 83 || code === 84 || code === 85) {
+      return "⛈";
+    }
+
+    if (code >= 50 && code <= 59) {
+      return "🌧";
+    }
+
+    if (code === 53 || code === 54) {
+      return "☀";
+    }
+
+    if (code >= 51 && code <= 59) {
+      return "🌦";
+    }
+
+    return "⛅";
   }
 
   function warningClass(code) {
@@ -564,7 +644,7 @@
     var warnsumUrl = replaceTemplate(config.weather.warnsum, { lang: lang });
     var warningInfoUrl = replaceTemplate(config.weather.warningInfo, { lang: lang });
 
-    return Promise.allSettled([
+    return allSettledCompat([
       fetchJson(currentUrl),
       fetchJson(warnsumUrl),
       fetchJson(warningInfoUrl)
@@ -593,7 +673,7 @@
       routeSeq: config.transport.gmb.routeSeq
     });
 
-    return Promise.allSettled([
+    return allSettledCompat([
       fetchJson(stopUrl),
       fetchJson(gmbStopUrl),
       fetchJson(config.transport.gmb.routeInfoEndpoint)
@@ -604,18 +684,18 @@
 
       if (results[1].status === "fulfilled" && results[1].value && results[1].value.data) {
         var stops = results[1].value.data.route_stops || [];
-        state.transport.gmbStop = stops.find(function (entry) {
+        state.transport.gmbStop = findFirst(stops, function (entry) {
           return Number(entry.stop_seq) === Number(config.transport.gmb.stopSeq);
         }) || null;
       }
 
       if (results[2].status === "fulfilled" && results[2].value && Array.isArray(results[2].value.data)) {
-        var routeInfo = results[2].value.data.find(function (route) {
+        var routeInfo = findFirst(results[2].value.data, function (route) {
           return Number(route.route_id) === Number(config.transport.gmb.routeId);
         }) || results[2].value.data[0];
 
         if (routeInfo && Array.isArray(routeInfo.directions)) {
-          state.transport.gmbDirection = routeInfo.directions.find(function (direction) {
+          state.transport.gmbDirection = findFirst(routeInfo.directions, function (direction) {
             return Number(direction.route_seq) === Number(config.transport.gmb.routeSeq);
           }) || routeInfo.directions[0];
         }

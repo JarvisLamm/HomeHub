@@ -20,6 +20,7 @@ html,
 body {
   margin: 0;
   min-height: 100%;
+  height: 100%;
 }
 
 body {
@@ -32,8 +33,11 @@ body {
 .app {
   position: relative;
   min-height: 100vh;
+  min-height: 100dvh;
   padding: 16px;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .background-layer {
@@ -222,6 +226,11 @@ h2 {
   width: 74px;
   height: 74px;
   object-fit: contain;
+}
+
+.weather-glyph {
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1;
 }
 
 .metric-grid {
@@ -521,106 +530,112 @@ h2 {
   }
 
   .app {
-    height: 100vh;
-    padding: 12px;
+    height: 100dvh;
+    min-height: 100dvh;
+    padding: 14px 14px 10px;
     overflow: hidden;
   }
 
   .top-bar {
-    padding: 10px 12px;
-    margin-bottom: 10px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
   }
 
   .clock-value {
-    font-size: clamp(1.3rem, 3.4vw, 2rem);
+    font-size: clamp(1.55rem, 4vw, 2.25rem);
   }
 
   .date-value {
-    font-size: 0.82rem;
+    font-size: 0.92rem;
   }
 
   .sync-status {
-    font-size: 0.74rem;
-    max-width: 240px;
+    font-size: 0.86rem;
+    max-width: 320px;
   }
 
   .dashboard-grid {
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    height: calc(100vh - 116px);
+    gap: 12px;
+    flex: 1;
+    min-height: 0;
   }
 
   .weather-panel,
   .transport-panel {
-    padding: 10px;
+    padding: 12px;
     min-height: 0;
     display: flex;
     flex-direction: column;
   }
 
   .panel-heading {
-    margin-bottom: 6px;
+    margin-bottom: 8px;
   }
 
   h1 {
-    font-size: clamp(1rem, 2.2vw, 1.26rem);
+    font-size: clamp(1.22rem, 2.8vw, 1.6rem);
   }
 
   .panel-subtitle {
-    font-size: 0.8rem;
+    font-size: 0.95rem;
   }
 
   .weather-main {
-    margin-top: 6px;
-    gap: 8px;
+    margin-top: 8px;
+    gap: 10px;
   }
 
   .weather-icon-wrap {
-    width: 76px;
-    height: 76px;
+    width: 88px;
+    height: 88px;
     border-radius: 14px;
   }
 
   .weather-icon {
-    width: 58px;
-    height: 58px;
+    width: 66px;
+    height: 66px;
+  }
+
+  .weather-glyph {
+    font-size: 2.3rem;
   }
 
   .metric-grid {
-    gap: 6px;
+    gap: 8px;
   }
 
   .metric-card {
-    min-height: 56px;
-    padding: 7px;
+    min-height: 72px;
+    padding: 9px;
     border-radius: 10px;
   }
 
   .metric-label {
-    font-size: 0.69rem;
+    font-size: 0.82rem;
   }
 
   .metric-value {
-    margin-top: 3px;
-    font-size: 0.96rem;
+    margin-top: 4px;
+    font-size: 1.2rem;
   }
 
   .tips-block,
   .warnings-block {
-    margin-top: 8px;
-    padding: 8px;
+    margin-top: 10px;
+    padding: 10px;
     border-radius: 10px;
   }
 
   .tips-block h2,
   .warnings-block h2 {
-    font-size: 0.84rem;
+    font-size: 1rem;
   }
 
   .tips-block p {
-    margin-top: 4px;
-    font-size: 0.75rem;
-    line-height: 1.22;
+    margin-top: 6px;
+    font-size: 0.9rem;
+    line-height: 1.28;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -628,93 +643,103 @@ h2 {
   }
 
   .warning-chips {
-    margin-top: 6px;
-    gap: 6px;
+    margin-top: 8px;
+    gap: 8px;
   }
 
   .warning-chip {
-    padding: 4px 7px;
+    padding: 6px 9px;
     gap: 5px;
   }
 
   .signal-icon {
-    width: 20px;
-    height: 20px;
-    font-size: 0.55rem;
+    width: 22px;
+    height: 22px;
+    font-size: 0.62rem;
   }
 
   .signal-text {
-    font-size: 0.7rem;
+    font-size: 0.84rem;
   }
 
   .warning-details {
-    margin-top: 6px;
+    margin-top: 8px;
     padding-left: 14px;
-    font-size: 0.72rem;
-    line-height: 1.18;
-    max-height: 2.8em;
+    font-size: 0.84rem;
+    line-height: 1.24;
+    max-height: 3.1em;
     overflow: hidden;
   }
 
   .warning-details li {
-    margin-bottom: 2px;
+    margin-bottom: 3px;
   }
 
   .transport-cards {
-    margin-top: 6px;
-    gap: 8px;
+    margin-top: 8px;
+    gap: 10px;
     flex: 1;
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+    min-height: 0;
   }
 
   .route-card {
-    padding: 8px;
+    padding: 10px;
     border-radius: 12px;
+    display: flex;
+    flex-direction: column;
   }
 
   .route-badge {
-    padding: 4px 8px;
-    font-size: 0.73rem;
+    padding: 5px 10px;
+    font-size: 0.85rem;
     gap: 5px;
   }
 
   .route-destination {
-    font-size: 0.72rem;
+    font-size: 0.84rem;
   }
 
   .route-stop {
-    margin-top: 4px;
-    font-size: 0.74rem;
-    line-height: 1.15;
+    margin-top: 6px;
+    font-size: 0.86rem;
+    line-height: 1.2;
   }
 
   .eta-list {
-    gap: 6px;
-    margin-top: 6px;
+    gap: 8px;
+    margin-top: 8px;
   }
 
   .eta-item {
-    min-height: 50px;
+    min-height: 58px;
     border-radius: 8px;
-    padding: 6px;
+    padding: 7px;
   }
 
   .eta-mins {
-    font-size: 0.88rem;
+    font-size: 1.02rem;
   }
 
   .eta-time {
-    margin-top: 2px;
-    font-size: 0.67rem;
+    margin-top: 3px;
+    font-size: 0.78rem;
   }
 
   .eta-remark {
-    margin-top: 1px;
-    font-size: 0.62rem;
+    margin-top: 2px;
+    font-size: 0.7rem;
   }
 
   .empty-row {
-    margin-top: 6px;
-    font-size: 0.75rem;
+    margin-top: 8px;
+    font-size: 0.88rem;
+  }
+}
+
+@supports (-webkit-touch-callout: none) {
+  .app {
+    min-height: -webkit-fill-available;
   }
 }
 

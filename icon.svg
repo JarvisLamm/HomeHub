@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Home Hub">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2a7a67"/>
+      <stop offset="100%" stop-color="#1f5f89"/>
+    </linearGradient>
+  </defs>
+  <rect x="24" y="24" width="464" height="464" rx="92" fill="url(#g)"/>
+  <path d="M118 280h276" stroke="#ffffff" stroke-width="24" stroke-linecap="round"/>
+  <path d="M150 280v-72h212v72" fill="none" stroke="#ffffff" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M176 352v-72m160 72v-72" stroke="#ffffff" stroke-width="24" stroke-linecap="round"/>
+</svg>

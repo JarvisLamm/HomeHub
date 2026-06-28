@@ -4,7 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="description" content="Home Hub dashboard for weather, warnings, and commute ETAs.">
+  <meta name="theme-color" content="#1e6f5c">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Home Hub">
   <title>Home Hub Dashboard</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon.svg">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -36,6 +43,7 @@
         <div class="weather-main">
           <div class="weather-icon-wrap">
             <img id="weatherIcon" class="weather-icon" src="" alt="Weather icon">
+            <span id="weatherGlyph" class="weather-glyph hidden" aria-hidden="true">⛅</span>
           </div>
 
           <div class="metric-grid">
