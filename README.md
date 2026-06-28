@@ -68,10 +68,20 @@ Edit config.js to change:
 1. Create a GitHub repository.
 2. Upload all files to the repository root.
 3. In repository Settings -> Pages:
-   - Source: Deploy from branch
-   - Branch: main
-   - Folder: /(root)
+  - Source: GitHub Actions
+4. The workflow in `.github/workflows/pages.yml` deploys automatically on every push to `main`.
 4. Open the generated Pages URL on iPad Safari.
+
+## iPad Full Screen
+
+1. Open the Pages URL in Safari.
+2. Tap Share -> Add to Home Screen.
+3. Launch from the Home Screen icon to run in standalone mode (no browser address bar).
+
+## Troubleshooting
+
+- If values stay as `--` on iPad, force refresh once in Safari and reopen from the Home Screen icon.
+- If HKO icon image is blocked by network policy, the dashboard falls back to an alternate HKO icon URL and then an emoji weather glyph.
 
 ## Notes
 
