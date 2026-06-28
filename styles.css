@@ -565,84 +565,149 @@ h2 {
   --accent-alt: #1f6d91;
 }
 
-.app.mode-dark {
-  --bg: #0f141a;
-  --surface: rgba(21, 28, 36, 0.84);
-  --surface-strong: rgba(27, 36, 46, 0.95);
-  --text: #e7eef6;
-  --muted: #a6b8ca;
-  --shadow: 0 20px 44px rgba(0, 0, 0, 0.48);
+.app.mode-dark-1,
+.app.mode-dark-2 {
+  --surface: rgba(20, 27, 36, 0.9);
+  --surface-strong: rgba(27, 36, 47, 0.96);
+  --text: #f3f8ff;
+  --muted: #d2dfed;
+  --shadow: 0 20px 44px rgba(0, 0, 0, 0.55);
 }
 
-.app.mode-dark .background-layer {
+.app.mode-dark-1 {
+  --bg: #0d1218;
+}
+
+.app.mode-dark-2 {
+  --bg: #11101a;
+}
+
+.app.mode-dark-1 .background-layer {
   background:
-    radial-gradient(140% 90% at 8% 0%, rgba(151, 121, 72, 0.28), transparent 54%),
-    radial-gradient(120% 90% at 100% 100%, rgba(49, 88, 128, 0.24), transparent 62%),
-    linear-gradient(165deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0));
+    radial-gradient(140% 90% at 8% 0%, rgba(168, 132, 74, 0.25), transparent 54%),
+    radial-gradient(120% 90% at 100% 100%, rgba(57, 101, 145, 0.25), transparent 62%),
+    linear-gradient(165deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0));
 }
 
-.app.mode-dark .orb-a {
-  background: rgba(173, 121, 49, 0.32);
+.app.mode-dark-2 .background-layer {
+  background:
+    radial-gradient(145% 95% at 6% 0%, rgba(107, 78, 170, 0.25), transparent 56%),
+    radial-gradient(125% 92% at 100% 100%, rgba(24, 123, 129, 0.24), transparent 63%),
+    linear-gradient(165deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0));
 }
 
-.app.mode-dark .orb-b {
-  background: rgba(35, 112, 102, 0.28);
+.app.mode-dark-1 .orb-a {
+  background: rgba(170, 122, 52, 0.3);
 }
 
-.app.mode-dark .orb-c {
-  background: rgba(59, 94, 136, 0.22);
+.app.mode-dark-1 .orb-b {
+  background: rgba(38, 116, 106, 0.3);
 }
 
-.app.mode-dark .panel,
-.app.mode-dark .metric-card,
-.app.mode-dark .tips-block,
-.app.mode-dark .warnings-block,
-.app.mode-dark .forecast-block,
-.app.mode-dark .route-card {
-  border-color: rgba(160, 181, 201, 0.2);
+.app.mode-dark-1 .orb-c {
+  background: rgba(70, 114, 160, 0.24);
 }
 
-.app.mode-dark .tips-block p,
-.app.mode-dark .warning-details,
-.app.mode-dark .route-stop,
-.app.mode-dark .route-badge {
-  color: #d3deea;
+.app.mode-dark-2 .orb-a {
+  background: rgba(138, 88, 183, 0.3);
 }
 
-.app.mode-dark .route-code,
-.app.mode-dark .warning-chip {
-  background: #2a3947;
-  border-color: rgba(173, 196, 219, 0.26);
-  color: #d9e7f4;
+.app.mode-dark-2 .orb-b {
+  background: rgba(31, 135, 140, 0.28);
 }
 
-.app.mode-dark .warning-chip.rain {
-  background: #224764;
-  border-color: #3a7094;
+.app.mode-dark-2 .orb-c {
+  background: rgba(88, 103, 186, 0.23);
 }
 
-.app.mode-dark .warning-chip.typhoon,
-.app.mode-dark .warning-chip.storm {
-  background: #4d3740;
-  border-color: #8f6674;
+.app.mode-dark-1 .panel,
+.app.mode-dark-1 .metric-card,
+.app.mode-dark-1 .tips-block,
+.app.mode-dark-1 .warnings-block,
+.app.mode-dark-1 .forecast-block,
+.app.mode-dark-1 .route-card,
+.app.mode-dark-2 .panel,
+.app.mode-dark-2 .metric-card,
+.app.mode-dark-2 .tips-block,
+.app.mode-dark-2 .warnings-block,
+.app.mode-dark-2 .forecast-block,
+.app.mode-dark-2 .route-card {
+  border-color: rgba(188, 208, 229, 0.28);
 }
 
-.app.mode-dark .eta-item,
-.app.mode-dark .forecast-item {
-  background: rgba(132, 171, 205, 0.17);
+.app.mode-dark-1 .tips-block p,
+.app.mode-dark-1 .warning-details,
+.app.mode-dark-1 .route-stop,
+.app.mode-dark-1 .route-badge,
+.app.mode-dark-1 .metric-label,
+.app.mode-dark-2 .tips-block p,
+.app.mode-dark-2 .warning-details,
+.app.mode-dark-2 .route-stop,
+.app.mode-dark-2 .route-badge,
+.app.mode-dark-2 .metric-label {
+  color: #e4effb;
 }
 
-.app.mode-dark .eta-remark {
-  color: #bdd0e3;
+.app.mode-dark-1 .route-code,
+.app.mode-dark-1 .warning-chip,
+.app.mode-dark-2 .route-code,
+.app.mode-dark-2 .warning-chip {
+  border-color: rgba(192, 214, 237, 0.35);
+  color: #ecf5ff;
 }
 
-.app.mode-dark .theme-toggle {
-  background: linear-gradient(135deg, #f0b34a, #c9872b);
-  color: #18202a;
+.app.mode-dark-1 .route-code,
+.app.mode-dark-1 .warning-chip {
+  background: #33485d;
 }
 
-.app.mode-dark .lang-toggle {
-  background: linear-gradient(135deg, #1b6a78, #3854a3);
+.app.mode-dark-2 .route-code,
+.app.mode-dark-2 .warning-chip {
+  background: #3f3b65;
+}
+
+.app.mode-dark-1 .warning-chip.rain,
+.app.mode-dark-2 .warning-chip.rain {
+  background: #2c5f84;
+  border-color: #4a86b3;
+}
+
+.app.mode-dark-1 .warning-chip.typhoon,
+.app.mode-dark-1 .warning-chip.storm,
+.app.mode-dark-2 .warning-chip.typhoon,
+.app.mode-dark-2 .warning-chip.storm {
+  background: #66495a;
+  border-color: #a7788f;
+}
+
+.app.mode-dark-1 .eta-item,
+.app.mode-dark-1 .forecast-item,
+.app.mode-dark-2 .eta-item,
+.app.mode-dark-2 .forecast-item {
+  background: rgba(143, 183, 219, 0.22);
+}
+
+.app.mode-dark-1 .eta-remark,
+.app.mode-dark-2 .eta-remark {
+  color: #d6e6f8;
+}
+
+.app.mode-dark-1 .theme-toggle {
+  background: linear-gradient(135deg, #f3be63, #d79b3e);
+  color: #1e2732;
+}
+
+.app.mode-dark-2 .theme-toggle {
+  background: linear-gradient(135deg, #8fd9de, #5f86d4);
+  color: #12202f;
+}
+
+.app.mode-dark-1 .lang-toggle {
+  background: linear-gradient(135deg, #217785, #3b5fb0);
+}
+
+.app.mode-dark-2 .lang-toggle {
+  background: linear-gradient(135deg, #3d5fc5, #7058c9);
 }
 
 @keyframes drift {

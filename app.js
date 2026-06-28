@@ -50,7 +50,8 @@
       route40Label: "Citybus 40",
       route56aLabel: "GMB 56A",
       themeLight: "Light",
-      themeDark: "Dark",
+      themeDark1: "Dark 1",
+      themeDark2: "Dark 2",
       switchTheme: "Switch theme",
       fallbackTip: "No special weather tip right now.",
       unknown: "--"
@@ -82,7 +83,8 @@
       route40Label: "城巴 40",
       route56aLabel: "小巴 56A",
       themeLight: "淺色",
-      themeDark: "深色",
+      themeDark1: "深色 1",
+      themeDark2: "深色 2",
       switchTheme: "切換主題",
       fallbackTip: "暫時沒有特別天氣提示。",
       unknown: "--"
@@ -254,6 +256,46 @@
     node.textContent = value;
   }
 
+  function isValidThemeMode(mode) {
+    return mode === "light" || mode === "dark1" || mode === "dark2";
+  }
+
+  function nextThemeMode(mode) {
+    if (mode === "light") {
+      return "dark1";
+    }
+
+    if (mode === "dark1") {
+      return "dark2";
+    }
+
+    return "light";
+  }
+
+  function themeModeClass(mode) {
+    if (mode === "dark1") {
+      return " mode-dark-1";
+    }
+
+    if (mode === "dark2") {
+      return " mode-dark-2";
+    }
+
+    return "";
+  }
+
+  function themeModeLabel(mode) {
+    if (mode === "dark1") {
+      return tr("themeDark1");
+    }
+
+    if (mode === "dark2") {
+      return tr("themeDark2");
+    }
+
+    return tr("themeLight");
+  }
+
   function loadThemePreference() {
     var saved = "";
 
@@ -264,7 +306,13 @@
     }
 
     if (saved === "dark") {
-      state.themeMode = "dark";
+      // Keep backward compatibility with the old single dark mode.
+      state.themeMode = "dark1";
+      return;
+    }
+
+    if (isValidThemeMode(saved)) {
+      state.themeMode = saved;
     }
   }
 
@@ -337,7 +385,7 @@
       themeClass = "theme-hot";
     }
 
-    refs.app.className = "app " + themeClass + (state.themeMode === "dark" ? " mode-dark" : "");
+    refs.app.className = "app " + themeClass + themeModeClass(state.themeMode);
 
     if (themeClass === "theme-rain" || themeClass === "theme-storm") {
       refs.rainLayer.classList.remove("hidden");
@@ -359,8 +407,9 @@
     refs.langToggle.textContent = state.lang === "en" ? "繁中" : "EN";
 
     if (refs.themeToggle) {
-      refs.themeToggle.textContent = state.themeMode === "dark" ? tr("themeLight") : tr("themeDark");
+      refs.themeToggle.textContent = themeModeLabel(state.themeMode);
       refs.themeToggle.setAttribute("aria-label", tr("switchTheme"));
+      refs.themeToggle.title = tr("switchTheme");
     }
   }
 
@@ -1003,7 +1052,7 @@
   }
 
   function onThemeToggle() {
-    state.themeMode = state.themeMode === "dark" ? "light" : "dark";
+    state.themeMode = nextThemeMode(state.themeMode);
     persistThemePreference();
     renderAll();
   }
