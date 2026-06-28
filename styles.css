@@ -38,6 +38,7 @@ body {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  color: var(--text);
 }
 
 .background-layer {
@@ -648,6 +649,20 @@ h2 {
   color: #e4effb;
 }
 
+.app.mode-dark-1 h1,
+.app.mode-dark-1 h2,
+.app.mode-dark-1 .sync-status,
+.app.mode-dark-1 .panel-subtitle {
+  color: #f2f9ff;
+}
+
+.app.mode-dark-2 h1,
+.app.mode-dark-2 h2,
+.app.mode-dark-2 .sync-status,
+.app.mode-dark-2 .panel-subtitle {
+  color: #fff3be;
+}
+
 .app.mode-dark-1 .route-code,
 .app.mode-dark-1 .warning-chip,
 .app.mode-dark-2 .route-code,
@@ -690,6 +705,14 @@ h2 {
 .app.mode-dark-1 .eta-remark,
 .app.mode-dark-2 .eta-remark {
   color: #d6e6f8;
+}
+
+.app.mode-dark-1 .eta-mins {
+  color: #9fe9ff;
+}
+
+.app.mode-dark-2 .eta-mins {
+  color: #ffe8a8;
 }
 
 .app.mode-dark-1 .theme-toggle {
