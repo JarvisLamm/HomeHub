@@ -381,16 +381,22 @@
       var iconCode = state.weather.icon[0];
       refs.weatherIcon.classList.remove("hidden");
       refs.weatherGlyph.classList.add("hidden");
-      refs.weatherIcon.src = "https://www.hko.gov.hk/images/HKOWxIconOutline/pic" + iconCode + ".png";
+      refs.weatherIcon.src = "https://www.hko.gov.hk/images/HKOWxIconOutline/Outline_wxicon_pic" + iconCode + ".png";
       refs.weatherIcon.alt = tr("weatherTitle") + " " + iconCode;
-      refs.weatherIcon.__altTried = false;
+      refs.weatherIcon.__fallbackStep = 0;
       refs.weatherIcon.onload = function () {
         refs.weatherIcon.classList.remove("hidden");
         refs.weatherGlyph.classList.add("hidden");
       };
       refs.weatherIcon.onerror = function () {
-        if (!refs.weatherIcon.__altTried) {
-          refs.weatherIcon.__altTried = true;
+        if (refs.weatherIcon.__fallbackStep === 0) {
+          refs.weatherIcon.__fallbackStep = 1;
+          refs.weatherIcon.src = "https://www.hko.gov.hk/images/HKOWxIconOutline/pic" + iconCode + ".png";
+          return;
+        }
+
+        if (refs.weatherIcon.__fallbackStep === 1) {
+          refs.weatherIcon.__fallbackStep = 2;
           refs.weatherIcon.src = "https://www.hko.gov.hk/images/wxicon/pic" + iconCode + ".png";
           return;
         }
@@ -445,6 +451,112 @@
     return "";
   }
 
+  function warningSymbolSrc(code, item) {
+    var upperCode = String(code || "").toUpperCase();
+    var lowerName = String(item && item.name ? item.name : "").toLowerCase();
+    var base = "https://www.hko.gov.hk/en/wxinfo/dailywx/images/";
+
+    var staticMap = {
+      WTS: base + "ts.gif",
+      WHOT: base + "vhot.gif",
+      WCOLD: base + "cold.gif",
+      WL: base + "landslip.gif",
+      WFROST: base + "frost.gif",
+      WFIREY: base + "firey.gif",
+      WFIRER: base + "firer.gif",
+      WTSUNAMI: base + "tsunami-warn.gif",
+      SMS: base + "sms.gif",
+      WMSGNL: base + "sms.gif",
+      WFNTSA: base + "ntfl.gif",
+      TC1: base + "tc1.gif",
+      TC3: base + "tc3.gif",
+      TC8NE: base + "tc8ne.gif",
+      TC8SE: base + "tc8b.gif",
+      TC8SW: base + "tc8c.gif",
+      TC8NW: base + "tc8d.gif",
+      TC8: base + "tc8ne.gif",
+      TC9: base + "tc9.gif",
+      TC10: base + "tc10.gif"
+    };
+
+    if (staticMap[upperCode]) {
+      return staticMap[upperCode];
+    }
+
+    if (upperCode.indexOf("WRAIN") === 0 || lowerName.indexOf("rainstorm") !== -1) {
+      if (upperCode.indexOf("B") !== -1 || lowerName.indexOf("black rainstorm") !== -1) {
+        return base + "rainb.gif";
+      }
+      if (upperCode.indexOf("R") !== -1 || lowerName.indexOf("red rainstorm") !== -1) {
+        return base + "rainr.gif";
+      }
+      return base + "raina.gif";
+    }
+
+    if (upperCode.indexOf("TC") === 0 || lowerName.indexOf("gale or storm signal") !== -1 || lowerName.indexOf("hurricane signal") !== -1) {
+      if (upperCode.indexOf("10") !== -1 || lowerName.indexOf("hurricane signal no. 10") !== -1) {
+        return base + "tc10.gif";
+      }
+      if (upperCode.indexOf("9") !== -1 || lowerName.indexOf("signal no. 9") !== -1) {
+        return base + "tc9.gif";
+      }
+      if (upperCode.indexOf("8SE") !== -1 || lowerName.indexOf("southeast gale") !== -1) {
+        return base + "tc8b.gif";
+      }
+      if (upperCode.indexOf("8SW") !== -1 || lowerName.indexOf("southwest gale") !== -1) {
+        return base + "tc8c.gif";
+      }
+      if (upperCode.indexOf("8NW") !== -1 || lowerName.indexOf("northwest gale") !== -1) {
+        return base + "tc8d.gif";
+      }
+      if (upperCode.indexOf("8NE") !== -1 || lowerName.indexOf("northeast gale") !== -1) {
+        return base + "tc8ne.gif";
+      }
+      if (upperCode.indexOf("3") !== -1 || lowerName.indexOf("signal no. 3") !== -1) {
+        return base + "tc3.gif";
+      }
+      return base + "tc1.gif";
+    }
+
+    if (lowerName.indexOf("thunderstorm warning") !== -1) {
+      return base + "ts.gif";
+    }
+
+    if (lowerName.indexOf("very hot") !== -1) {
+      return base + "vhot.gif";
+    }
+
+    if (lowerName.indexOf("cold weather") !== -1) {
+      return base + "cold.gif";
+    }
+
+    if (lowerName.indexOf("strong monsoon") !== -1) {
+      return base + "sms.gif";
+    }
+
+    if (lowerName.indexOf("landslip") !== -1) {
+      return base + "landslip.gif";
+    }
+
+    if (lowerName.indexOf("frost") !== -1) {
+      return base + "frost.gif";
+    }
+
+    if (lowerName.indexOf("fire danger") !== -1) {
+      return lowerName.indexOf("red") !== -1 ? base + "firer.gif" : base + "firey.gif";
+    }
+
+    if (lowerName.indexOf("tsunami") !== -1) {
+      return base + "tsunami-warn.gif";
+    }
+
+    if (lowerName.indexOf("flooding in northern new territories") !== -1) {
+      return base + "ntfl.gif";
+    }
+
+    return "";
+  }
+
   function warningIconLabel(code) {
     if (code.indexOf("WRAIN") === 0) {
       return code.slice(-1);
@@ -483,26 +595,11 @@
     return "default";
   }
 
-  function transportIconSvg(mode) {
-    if (mode === "gmb") {
-      return [
-        "<svg viewBox='0 0 24 24' aria-hidden='true' focusable='false'>",
-        "<rect x='2' y='6' width='20' height='12' rx='3' fill='none' stroke='currentColor' stroke-width='1.8'></rect>",
-        "<path d='M6 6v12M18 6v12' stroke='currentColor' stroke-width='1.5'></path>",
-        "<circle cx='7.5' cy='18.5' r='1.8' fill='currentColor'></circle>",
-        "<circle cx='16.5' cy='18.5' r='1.8' fill='currentColor'></circle>",
-        "</svg>"
-      ].join("");
-    }
+  function transportIconMarkup(mode) {
+    var src = mode === "gmb" ? "icon/minibus.png" : "icon/bus.png";
+    var alt = mode === "gmb" ? "Minibus" : "Bus";
 
-    return [
-      "<svg viewBox='0 0 24 24' aria-hidden='true' focusable='false'>",
-      "<rect x='2' y='5' width='20' height='13' rx='2.6' fill='none' stroke='currentColor' stroke-width='1.8'></rect>",
-      "<path d='M6 5h12v5H6z' fill='currentColor' opacity='0.28'></path>",
-      "<circle cx='7' cy='19' r='2' fill='currentColor'></circle>",
-      "<circle cx='17' cy='19' r='2' fill='currentColor'></circle>",
-      "</svg>"
-    ].join("");
+    return "<img src='" + src + "' alt='" + alt + "' loading='lazy'>";
   }
 
   function renderWarnings() {
@@ -522,9 +619,14 @@
       var chip = document.createElement("span");
       var cls = warningClass(code);
       var tone = warningIconTone(code);
+      var symbolSrc = warningSymbolSrc(code, item);
+      var symbolHtml = symbolSrc
+        ? "<img class='signal-symbol' src='" + escapeHtml(symbolSrc) + "' alt='" + escapeHtml(item.name || code) + "'>"
+        : "<span class='signal-icon signal-" + tone + "'>" + escapeHtml(warningIconLabel(code)) + "</span>";
+
       chip.className = "warning-chip" + (cls ? " " + cls : "");
       chip.innerHTML = [
-        "<span class='signal-icon signal-" + tone + "'>" + escapeHtml(warningIconLabel(code)) + "</span>",
+        symbolHtml,
         "<span class='signal-text'>" + escapeHtml(code + " " + (item.name || "")) + "</span>"
       ].join("");
       refs.warningChips.appendChild(chip);
@@ -605,7 +707,7 @@
       "<article class=\"route-card\">",
       "<div class=\"route-top\">",
       "<div class=\"route-badge\">",
-      "<span class=\"route-icon\">" + transportIconSvg(mode) + "</span>",
+      "<span class=\"route-icon\">" + transportIconMarkup(mode) + "</span>",
       "<span>" + escapeHtml(routeBadge) + "</span>",
       "</div>",
       "<div class=\"route-destination\">" + escapeHtml(tr("destination")) + ": " + escapeHtml(destination || tr("unknown")) + "</div>",
