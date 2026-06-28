@@ -224,6 +224,13 @@
     return state.lang === "tc" ? item[base + "_tc"] || item[base + "_en"] || "" : item[base + "_en"] || item[base + "_tc"] || "";
   }
 
+  function readLangObject(item) {
+    if (!item) {
+      return "";
+    }
+    return state.lang === "tc" ? item.tc || item.en || "" : item.en || item.tc || "";
+  }
+
   function setText(node, value) {
     node.textContent = value;
   }
@@ -610,15 +617,21 @@
   }
 
   function renderTransport() {
-    var stopName = state.transport.citybusStop ? readLangField(state.transport.citybusStop, "name") : "";
+    var stopName = state.transport.citybusStop
+      ? readLangField(state.transport.citybusStop, "name")
+      : readLangObject(config.transport.citybus.stopName);
     var rows23 = citybusRows("23");
     var rows40 = citybusRows("40");
     var rows56a = gmbRows();
 
     var dest23 = rows23.length ? rows23[0].destination : "";
     var dest40 = rows40.length ? rows40[0].destination : "";
-    var dest56a = state.transport.gmbDirection ? readLangField(state.transport.gmbDirection, "dest") : "";
-    var stop56a = state.transport.gmbStop ? readLangField(state.transport.gmbStop, "name") : "";
+    var dest56a = state.transport.gmbDirection
+      ? readLangField(state.transport.gmbDirection, "dest")
+      : readLangObject(config.transport.gmb.destination);
+    var stop56a = state.transport.gmbStop
+      ? readLangField(state.transport.gmbStop, "name")
+      : readLangObject(config.transport.gmb.stopName);
 
     refs.transportCards.innerHTML = [
       routeCardHtml(tr("route23Label"), stopName, dest23, rows23, "CTB 23", "citybus"),
